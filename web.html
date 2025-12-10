@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en" class="react">
+  <head>
+    <meta name="application-name" content="MYWM_VERSION: 7f9c0710b">
+
+    <!-- OneTrust Cookies Consent Notice start for wm.com -->
+    <script
+      type="text/javascript"
+      src="https://cdn.cookielaw.org/consent/3c68903b-ecb7-42b9-b874-6e1bf32a27e5/OtAutoBlock.js"
+    ></script>
+    <script>
+      var script = document.createElement("script")
+      var lang = window.location.href.includes("ca/fr") ? "fr" : "en"
+      script.src = "https://cdn.cookielaw.org/scripttemplates/otSDKStub.js"
+      script.type = "text/javascript"
+      script.charset = "UTF-8"
+      script.setAttribute("data-language", lang)
+      script.setAttribute("data-domain-script", "3c68903b-ecb7-42b9-b874-6e1bf32a27e5")
+      document.head.prepend(script)
+    </script>
+    <script type="text/javascript">
+      function OptanonWrapper() {
+        if (OnetrustActiveGroups.includes("C0009")) {
+          const event = new Event("logrocketload")
+          document.dispatchEvent(event)
+        }
+      }
+    </script>
+    <!-- OneTrust Cookies Consent Notice end for wm.com -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="theme-color" content="#000000" />
+    <link rel="manifest" href="https://www.wm.com/manifest.json" />
+    <link rel="shortcut icon" href="https://www.wm.com/favicon.ico" />
+    <title>Waste Management</title>
+    <link
+      rel="prefetch"
+      href="https://www.wm.com/content/dam/wm/fonts/maax-regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="prefetch"
+      href="https://www.wm.com/content/dam/wm/fonts/maax-black.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="prefetch"
+      href="https://www.wm.com/content/dam/wm/fonts/maax-bold.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="prefetch"
+      href="https://www.wm.com/content/dam/wm/fonts/maax-italic.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <script type="text/javascript">
+      if (parent.frames.length > 0) {
+        console.log("Document Location: " + document.location)
+        top.location.replace(document.location)
+      }
+      // Version: REACT_APP_VERSION
+      if (!window.WMCANADA) {
+        //WMPAGE object is missing
+        window.WMCANADA = {}
+      }
+      window.WMCANADA.ENV = "prod"
+      window.WMCANADA.VERSION = "34.0.1"
+      ;(function () {
+        const appVersion = localStorage.getItem("WMCANADA.COM-VERSION")
+        if (appVersion && window.WMCANADA.VERSION != appVersion) {
+          localStorage.removeItem("WMCANADA.COM-DATE_VERSION") /* Legacy */
+          localStorage.removeItem("WMCANADA.COM-VERSION")
+          localStorage.removeItem("redux")
+          localStorage.setItem("WMCANADA.COM-VERSION", window.WMCANADA.VERSION)
+        } else if (!appVersion) {
+          localStorage.setItem("WMCANADA.COM-VERSION", window.WMCANADA.VERSION)
+        }
+      })()
+    </script>
+    <script type="text/javascript">
+      window._dl = window._dl || {}
+    </script>
+    <script>
+      window.dataLayer = window.dataLayer || []
+      function gtag(...args) {
+        dataLayer.push(args)
+      }
+      gtag("js", new Date())
+      gtag("config", "UA-15073516-62")
+    </script>
+    <script>
+      if (!window.cnxUserId) {
+        window.cnxUserId = ``
+      }
+      if (!window.cnxCustomerIds) {
+        window.cnxCustomerIds = ``
+      }
+    </script>
+    <script>
+      try {
+        function accessCookie(cookieName) {
+          const name = `${cookieName}=`
+          if (document.cookie) {
+            const allCookieArray = document.cookie.split(";")
+            for (let i = 0; i < allCookieArray.length; i++) {
+              const temp = allCookieArray[i].trim()
+              if (temp.indexOf(name) == 0) {
+                const cookieStr = temp.substring(name.length, temp.length)
+                return JSON.parse(cookieStr)
+              }
+            }
+          }
+          return ""
+        }
+        function getParam(p) {
+          const match = RegExp(`[?&]${p}=([^&]*)`).exec(window.location.search)
+          return match && decodeURIComponent(match[1].replace(/\+/g, " "))
+        }
+        function getExpiryRecord(value) {
+          const expiryPeriod = 90 * 24 * 60 * 60 * 1000 // 90 day expiry in milliseconds
+          const expiryDate = new Date().getTime() + expiryPeriod
+          return {
+            value,
+            expiryDate,
+          }
+        }
+        function addGclid() {
+          const gclidParam = getParam("gclid")
+          const gclidFormFields = ["gclid_field", "foobar"] // all possible gclid form field ids here
+          let gclidRecord = null
+          let currGclidFormField
+          const gclsrcParam = getParam("gclsrc")
+          const isGclsrcValid = !gclsrcParam || gclsrcParam.includes("aw")
+          gclidFormFields.forEach((field) => {
+            if (document.getElementById(field)) {
+              currGclidFormField = document.getElementById(field)
+            }
+          })
+          if (gclidParam && isGclsrcValid) {
+            gclidRecord = getExpiryRecord(gclidParam)
+            const cookieVal = JSON.stringify(gclidRecord)
+            let hostName = window.location.hostname.replace(/www./i, ``)
+            if (
+              hostName === "wmqa2.wm.com" ||
+              hostName === "wmqa3.wm.com" ||
+              hostName === "wm.com"
+            ) {
+              hostName = ".wm.com"
+            }
+            document.cookie = `gclid=${cookieVal};domain=${hostName};path=/`
+          }
+          const storedCookie = accessCookie("gclid")
+          const gclid = gclidRecord || (storedCookie && storedCookie.value)
+          const isGclidValid = gclid && new Date().getTime() < gclid.expiryDate
+          if (currGclidFormField && isGclidValid) {
+            currGclidFormField.value = gclid.value
+          }
+        }
+        window.addEventListener("load", addGclid)
+      } catch (err) {
+        console.log(err.message)
+      }
+    </script>
+    <!-- This is for WMX merge -->
+    <script>
+      if (!window.WM) {
+        //WMPAGE object is missing
+        window.WM = {}
+      }
+      // window.WM.DATE_VERSION = __DATE_VERSION__
+      window.WM.SITE = "SPA"
+      ;(function () {
+        var div, div2
+        if (window.WM.SITE === "JSP") {
+          document.write(
+            '<link rel="stylesheet" type="text/css" href="/legacy-bootstrap.min.css">',
+          )
+        }
+      })()
+    </script>
+    <script
+      type="text/javascript"
+      src="//fast.fonts.net/jsapi/5998bf4c-ed95-408a-b3ad-efb7c8ffc9be.js"
+    ></script>
+    <script
+      src="//assets.adobedtm.com/3010f46ab2ec/a3cbfcd83a52/launch-4688d17a7429.min.js"
+      async
+    ></script>
+
+    <script type="module" crossorigin src="https://www.wm.com/static/index-C7RIAFrA.js"></script>
+    <link rel="modulepreload" crossorigin href="https://www.wm.com/static/react-B07eDqwt.chunk.js">
+    <link rel="modulepreload" crossorigin href="https://www.wm.com/static/muiStyles-D3IRgJN0.chunk.js">
+    <link rel="modulepreload" crossorigin href="https://www.wm.com/static/lodash-CVPW7HvF.chunk.js">
+    <link rel="modulepreload" crossorigin href="https://www.wm.com/static/algolia-BJJWjzNB.chunk.js">
+    <link rel="modulepreload" crossorigin href="https://www.wm.com/static/okta-Bi8FQSBx.chunk.js">
+    <link rel="modulepreload" crossorigin href="https://www.wm.com/static/moment-CAEcp8GN.chunk.js">
+    <link rel="modulepreload" crossorigin href="https://www.wm.com/static/aws-9ELz3M5y.chunk.js">
+    <link rel="modulepreload" crossorigin href="https://www.wm.com/static/muiLab-Cbd7gPc8.chunk.js">
+    <link rel="stylesheet" crossorigin href="https://www.wm.com/static/index-Cuk7GK43.chunk.css">
+    <script>console.log("MYWM_VERSION: 7f9c0710b")</script>
+    <script>__MYWM_VERSION__ = "7f9c0710b"</script>
+  </head>
+
+  <body>
+    <noscript> You need to enable JavaScript to access this website. </noscript>
+    <script>
+      ;(() => {
+        let div
+        let div2
+        if (window.WM.SITE === "JSP") {
+          div = document.createElement("div")
+          div.setAttribute("id", "header")
+          div2 = document.createElement("div")
+          div2.setAttribute("id", "footer")
+          document.body.appendChild(div)
+          document.body.appendChild(div2)
+        }
+        if (window.WM.SITE === "SPA") {
+          div = document.createElement("div")
+          div.setAttribute("id", "root")
+          document.body.appendChild(div)
+        }
+      })()
+    </script>
+    <script type="text/javascript">
+      window.addEventListener("vite:preloadError", (event) => {
+        window.location.reload() // for example, refresh the page
+      })
+    </script>
+  </body>
+</html>
+
