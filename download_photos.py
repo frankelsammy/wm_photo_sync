@@ -7,11 +7,12 @@ from dotenv import load_dotenv
 from playwright.sync_api import sync_playwright
 
 load_dotenv()
+customer_id_map = customer_id_map.make_map()
 def normalize(text):
     return text.replace("\u200b", "").strip()
 with sync_playwright() as p:
     # Launch browser
-    print(len(customer_id_map.make_map()))
+    
     browser = p.chromium.launch(headless=False)
     context = browser.new_context()
     page = context.new_page()
@@ -32,83 +33,38 @@ with sync_playwright() as p:
     list_container = page.locator('div[data-testid="WindowedList"]')
     list_container.wait_for(state="visible", timeout=20000)
 
-    # Scroll to top
-    list_container.evaluate("(el) => el.scrollTo(0, 0)")
-    page.wait_for_timeout(500)
+    def find_customer_button(customerID):
+        # Scroll to top
+        list_container.evaluate("(el) => el.scrollTop = 0")
+        page.wait_for_timeout(1000)
 
-    seen = set()
-    scroll_attempts = 0
+        scroll_attempts = 0
+        while scroll_attempts < 10:  # Allow more attempts to find the button
+            button = list_container.locator("button", has_text=customerID)
+            if button.count() > 0:
+                return button.first
 
-    while scroll_attempts < 3:
-        # Record current count
-        prev_count = len(seen)
-        
-        # Re-query buttons each scroll
-        buttons = list_container.locator("button")
-        for i in range(buttons.count()):
-            txt = buttons.nth(i).inner_text().strip()
-            if txt:
-                seen.add(txt)
-
-        # Check if we found new buttons
-        if len(seen) > prev_count:
-            scroll_attempts = 0  # reset attempts
-        else:
+            # Scroll down
+            bbox = list_container.bounding_box()
+            if bbox:
+                page.mouse.move(bbox['x'] + bbox['width'] / 2, bbox['y'] + bbox['height'] / 2)
+            page.mouse.wheel(0, 400)
+            page.wait_for_timeout(1000)
             scroll_attempts += 1
 
-        # Scroll slowly to make it visible
-        if scroll_attempts < 3:
-            print(f"Scrolling... currently have {len(seen)} buttons")
-            list_container.hover()
-            page.mouse.wheel(0, 400)  # Scroll down by 400 pixels
-            page.wait_for_timeout(2000)  # longer wait to see the scroll
-
-    # Print all button titles
-    print(f"✅ Found {len(seen)} buttons:")
-    for title in sorted(seen):
-        print(title)
+        return None  # Button not found
 
 
-    # for customer_id in customer_id_map.keys():
-    #     current_customer = customer_id
-    #     button_found = False
+    for customer_id in customer_id_map.keys():
+        current_customer = customer_id
+        print(f"Processing customer: {current_customer}")
+        customer_button = find_customer_button(current_customer)
+        if customer_button is None:
+            print(f"Customer button for {current_customer} not found, skipping.")
+            continue 
+        print(f"Clicking button for customer: {current_customer}")
+        
 
-    #     list_container = page.locator('div[data-testid="WindowedList"]')
-    #     try:
-    #         list_container.wait_for(state="visible", timeout=20000)
-    #         print("✅ WindowedList container is visible")
-    #     except:
-    #         print("❌ WindowedList container NOT found / not visible")
-    #         raise
-
-    #     # 🔁 ALWAYS reset scroll to top before searching
-    #     list_container.evaluate("(el) => el.scrollTo(0, 0)")
-    #     page.wait_for_timeout(800)  # let React re-render
-
-    #     for i in range(60):  # more passes, slower
-    #         button = page.locator(
-    #             "button.btn-customer-id",
-    #             has_text=current_customer
-    #         )
-
-    #         if button.count() > 0:
-    #             button.first.scroll_into_view_if_needed()
-    #             page.wait_for_timeout(300)
-    #             button.first.click()
-    #             print(f"🎯 Clicked customer {current_customer} (scroll step {i})")
-    #             button_found = True
-    #             break
-
-    #         # ⬇️ slow, incremental scrolling
-    #         list_container.evaluate("(el) => el.scrollBy(0, el.clientHeight * 0.6)")
-    #         page.wait_for_timeout(500)  # CRITICAL: slow down
-
-    #     if not button_found:
-    #         print(f"Customer {current_customer} not found")
-    #         continue
-
-    #     page.get_by_role("button", name=customer_id).wait_for()
-    #     page.get_by_role("button", name=customer_id).click()
         
     #     page.get_by_role("button", name="My Services").wait_for()
     #     page.get_by_role("button", name="My Services").click()
