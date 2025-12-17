@@ -13,4 +13,3 @@ def format_id(customer_id):
     formatted = customer_id[3:]
     formatted = formatted[0:2] + '-' + formatted[2:7] + '-' + formatted[7:]
     return formatted
-print(make_map())
