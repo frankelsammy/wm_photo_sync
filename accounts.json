@@ -862,54 +862,6 @@
                     "REQUEST_ETA",
                     "REQUEST_PICKUP"
                 ],
-                "custAccountId": "000274760553002",
-                "linkedProfilesCount": 1,
-                "nickName": "1890 plaza",
-                "linkStatus": "YES",
-                "serviceAddress": {
-                    "country": "US",
-                    "state": "GA",
-                    "city": "ATLANTA",
-                    "street": "1895 PLAZA LN SW",
-                    "postalCode": "30311-5062"
-                }
-            },
-            {
-                "address": {},
-                "channel": "web",
-                "lob": "COMMERCIAL",
-                "entitlements": [
-                    "BILLPAY",
-                    "REQUEST_SERVICE",
-                    "SCHEDULE_PAY",
-                    "ORDER_DUMPSTER",
-                    "REQUEST_ETA",
-                    "REQUEST_PICKUP"
-                ],
-                "custAccountId": "000274769223003",
-                "linkedProfilesCount": 1,
-                "nickName": "1890 adams",
-                "linkStatus": "YES",
-                "serviceAddress": {
-                    "country": "US",
-                    "state": "GA",
-                    "city": "ATLANTA",
-                    "street": "2280 CAMPBELLTON RD SW",
-                    "postalCode": "30311-4621"
-                }
-            },
-            {
-                "address": {},
-                "channel": "web",
-                "lob": "COMMERCIAL",
-                "entitlements": [
-                    "BILLPAY",
-                    "REQUEST_SERVICE",
-                    "SCHEDULE_PAY",
-                    "ORDER_DUMPSTER",
-                    "REQUEST_ETA",
-                    "REQUEST_PICKUP"
-                ],
                 "custAccountId": "000286617933001",
                 "linkedProfilesCount": 2,
                 "nickName": "Kasteel @ Stone Mountain",
@@ -1088,48 +1040,6 @@
                     "city": "GAINESVILLE",
                     "street": "434 HIGH ST SW",
                     "postalCode": "30501-4414"
-                }
-            },
-            {
-                "address": {},
-                "channel": "web",
-                "lob": "ROLLOFF",
-                "entitlements": [
-                    "BILLPAY",
-                    "REQUEST_SERVICE",
-                    "PURCHASER"
-                ],
-                "custAccountId": "000307101993008",
-                "linkedProfilesCount": 1,
-                "nickName": "Tristan Opentop (NEW)",
-                "linkStatus": "YES",
-                "serviceAddress": {
-                    "country": "US",
-                    "state": "GA",
-                    "city": "SAVANNAH",
-                    "street": "112 DENMARK ST",
-                    "postalCode": "31408-1643"
-                }
-            },
-            {
-                "address": {},
-                "channel": "web",
-                "lob": "ROLLOFF",
-                "entitlements": [
-                    "BILLPAY",
-                    "REQUEST_SERVICE",
-                    "PURCHASER"
-                ],
-                "custAccountId": "000313222173006",
-                "linkedProfilesCount": 0,
-                "nickName": "Reserve OT",
-                "linkStatus": "YES",
-                "serviceAddress": {
-                    "country": "US",
-                    "state": "GA",
-                    "city": "STONE MOUNTAIN",
-                    "street": "1420 S HAIRSTON RD",
-                    "postalCode": "30088-3038"
                 }
             },
             {
