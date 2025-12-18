@@ -4,7 +4,7 @@ import os
 import time
 from datetime import date
 from dotenv import load_dotenv
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import sync_playwright, TimeoutError
 
 load_dotenv()
 customer_id_map = customer_id_map.make_map()
@@ -13,7 +13,7 @@ def normalize(text):
 with sync_playwright() as p:
     # Launch browser
     
-    browser = p.chromium.launch(headless=False)
+    browser = p.chromium.launch(headless=True)
     context = browser.new_context()
     page = context.new_page()
     page.bring_to_front()  # Bring the browser window to the front
@@ -53,62 +53,93 @@ with sync_playwright() as p:
             scroll_attempts += 1
 
         return None  # Button not found
-
-
+    
+    # Make directory for today's results
+    results_dir = f"results/{date.today()}"
+    os.makedirs(results_dir, exist_ok=True)
+    
+    i = 0
     for customer_id in customer_id_map.keys():
+        i += 1
+        print(f"Processing customer {i} of {len(customer_id_map)}")
         current_customer = customer_id
-        print(f"Processing customer: {current_customer}")
+        customer_name = customer_id_map[current_customer]
+        # Create directory for current customer
+        customer_dir = f"{results_dir}/{customer_name}"
+
+        # For testing -- skip existing directories
+        if os.path.exists(customer_dir):
+            print(f"Directory for customer {current_customer} already exists, skipping download.")
+            page.goto("https://www.wm.com/us/en/user/login?redirect=/us/en/mywm/user/my-payment/billing/overview")
+            continue
+
+
+        print(f"Processing customer: {current_customer}: {customer_name}")
         customer_button = find_customer_button(current_customer)
         if customer_button is None:
             print(f"Customer button for {current_customer} not found, skipping.")
+            
             continue 
         print(f"Clicking button for customer: {current_customer}")
+        page.click(f'button:has-text("{current_customer}")')
+
+        page.get_by_role("button", name="My Services").wait_for()
+        page.get_by_role("button", name="My Services").click()
+        try:
+            page.get_by_role("button", name="View Service History").wait_for()
+            page.get_by_role("button", name="View Service History").click()
+        except TimeoutError:
+            print(f"'View Service History' button not found for customer {current_customer}, skipping.")
+            page.goto("https://www.wm.com/us/en/user/login?redirect=/us/en/mywm/user/my-payment/billing/overview")
+            
+            continue
+
+        try:
+            page.get_by_role("button", name="View Details").first.wait_for(state="visible", timeout=3000)  # 3 seconds
+            page.get_by_role("button", name="View Details").first.click()
+        except TimeoutError:
+            # Button never appeared → skip
+            print(f"'View Details' button did not appear for customer {current_customer}, skipping.")
+            page.goto("https://www.wm.com/us/en/user/login?redirect=/us/en/mywm/user/my-payment/billing/overview")
+            continue
+        time.sleep(5)  # Wait for the service history page to load
         
 
-        
-    #     page.get_by_role("button", name="My Services").wait_for()
-    #     page.get_by_role("button", name="My Services").click()
+        # --- Collect ALL truckimages media from the DOM ---
+        media_urls = page.evaluate("""
+        () => {
+            const urls = new Set();
 
-    #     page.get_by_role("button", name="View Service History").wait_for()
-    #     page.get_by_role("button", name="View Service History").click()
+            document.querySelectorAll("img[src], video[src]").forEach(el => {
+                const src = el.getAttribute("src");
+                if (src && src.includes("truckimages.wm.com")) {
+                    urls.add(src);
+                }
+            });
 
-    #     page.get_by_role("button", name="View Details").first.wait_for(state="visible")
-    #     page.get_by_role("button", name="View Details").first.click()
-    #     time.sleep(5)  # Wait for the service history page to load
-        
-    #     # Create directory for current customer
-    #     os.makedirs(current_customer, exist_ok=True)
+            return Array.from(urls);
+        }
+        """)
+        # Create customer directory
+        if len(media_urls) > 0:
+            os.makedirs(customer_dir, exist_ok=True)
+        else:
+            page.goto("https://www.wm.com/us/en/user/login?redirect=/us/en/mywm/user/my-payment/billing/overview")
+            continue
+        # --- Download media ---
+        for idx, url in enumerate(media_urls, start=1):
+            print(f"Downloading media {idx}: {url}")
 
-    #     # --- Collect ALL truckimages media from the DOM ---
-    #     media_urls = page.evaluate("""
-    #     () => {
-    #         const urls = new Set();
+            content = page.request.get(url).body()
 
-    #         document.querySelectorAll("img[src], video[src]").forEach(el => {
-    #             const src = el.getAttribute("src");
-    #             if (src && src.includes("truckimages.wm.com")) {
-    #                 urls.add(src);
-    #             }
-    #         });
-
-    #         return Array.from(urls);
-    #     }
-    #     """)
-
-    #     # --- Download media ---
-    #     for idx, url in enumerate(media_urls, start=1):
-    #         print(f"Downloading media {idx}: {url}")
-
-    #         content = page.request.get(url).body()
-
-    #         # Determine file extension
-    #         ext = url.split(".")[-1].split("?")[0]
-    #         kind = "video" if ext.lower() in ("mp4", "webm", "mov") else "image"
-    #         today = date.today()
-    #         with open(f"results/{today}/{current_customer}/{current_customer}_{kind}_{idx}.{ext}", "wb") as f:
-    #             f.write(content)
-        
-    #     # return to Billing overview page
-    #     page.goto("https://www.wm.com/us/en/user/login?redirect=/us/en/mywm/user/my-payment/billing/overview")
+            # Determine file extension
+            ext = url.split(".")[-1].split("?")[0]
+            kind = "video" if ext.lower() in ("mp4", "webm", "mov") else "image"
+            today = date.today()
+            print(customer_dir)
+            with open(f"{customer_dir}/{kind}.{idx}.{ext}", "wb") as f:
+                f.write(content)
+            # return to Billing overview page
+        page.goto("https://www.wm.com/us/en/user/login?redirect=/us/en/mywm/user/my-payment/billing/overview")
     time.sleep(10)
     browser.close()
