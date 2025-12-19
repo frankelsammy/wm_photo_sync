@@ -31,7 +31,7 @@ with sync_playwright() as p:
     # Click login button
     page.click("button[data-testid='LoginWidget-login-button']")
     list_container = page.locator('div[data-testid="WindowedList"]')
-    list_container.wait_for(state="visible", timeout=20000)
+    list_container.wait_for(state="visible", timeout=10000)
 
     def find_customer_button(customerID):
         # Scroll to top
@@ -66,12 +66,11 @@ with sync_playwright() as p:
         customer_name = customer_id_map[current_customer]
         # Create directory for current customer
         customer_dir = f"{results_dir}/{customer_name}"
-
-        # For testing -- skip existing directories
+        # check if we've already downloaded photos for this customer today
         if os.path.exists(customer_dir):
             print(f"Directory for customer {current_customer} already exists, skipping download.")
-            page.goto("https://www.wm.com/us/en/user/login?redirect=/us/en/mywm/user/my-payment/billing/overview")
             continue
+
 
 
         print(f"Processing customer: {current_customer}: {customer_name}")
@@ -86,7 +85,7 @@ with sync_playwright() as p:
         page.get_by_role("button", name="My Services").wait_for()
         page.get_by_role("button", name="My Services").click()
         try:
-            page.get_by_role("button", name="View Service History").wait_for()
+            page.get_by_role("button", name="View Service History").wait_for(timeout=5000)
             page.get_by_role("button", name="View Service History").click()
         except TimeoutError:
             print(f"'View Service History' button not found for customer {current_customer}, skipping.")
@@ -124,6 +123,7 @@ with sync_playwright() as p:
         if len(media_urls) > 0:
             os.makedirs(customer_dir, exist_ok=True)
         else:
+            # No media found → skip
             page.goto("https://www.wm.com/us/en/user/login?redirect=/us/en/mywm/user/my-payment/billing/overview")
             continue
         # --- Download media ---
