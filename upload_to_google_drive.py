@@ -128,4 +128,4 @@ def upload_photos(results_dir):
 
 
 if __name__ == "__main__":
-  upload_photos("results/2025-12-19")
+  upload_photos("results/2025-12-22")
