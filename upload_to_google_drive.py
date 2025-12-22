@@ -4,10 +4,10 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
+from googleapiclient.http import MediaFileUpload
 from googleapiclient.errors import HttpError
 
-# If modifying these scopes, delete the file token.json.
-SCOPES = ["https://www.googleapis.com/auth/drive.metadata.readonly"]
+SCOPES = ["https://www.googleapis.com/auth/drive.file"]
 
 
 def main():
@@ -34,7 +34,24 @@ def main():
       token.write(creds.to_json())
 
   try:
+    # create drive api client
     service = build("drive", "v3", credentials=creds)
+
+    file_metadata = {"name": "example.txt"}
+    media = MediaFileUpload("example.txt", mimetype="text/plain")
+    # pylint: disable=maybe-no-member
+    file = (
+        service.files()
+        .create(body=file_metadata, media_body=media, fields="id")
+        .execute()
+    )
+    print(f'File ID: {file.get("id")}')
+
+  except HttpError as error:
+    print(f"An error occurred: {error}")
+    file = None
+  
+
     
 
 
