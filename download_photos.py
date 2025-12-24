@@ -134,7 +134,7 @@ def download_todays_media():
             # Create customer directory
             # Filter URLs for media from today
             today = date.today()
-            media_today = [url for url in media_urls if extract_date_from_url(url) == today]
+            media_today = [url for url in media_urls if get_date(url) == today]
 
             # Only create the customer directory if there is media from today
             if media_today:
