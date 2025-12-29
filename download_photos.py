@@ -21,11 +21,13 @@ def get_date(url):
     extracted_date = date(year, month, day)
     return extracted_date
 
-def download_todays_media():     
+def download_todays_media(): 
+    today = date.today()
+    print(f"Downloading photos for {today}")    
     with sync_playwright() as p:
         # Launch browser
         
-        browser = p.chromium.launch(headless=False)
+        browser = p.chromium.launch(headless=True)
         context = browser.new_context()
         page = context.new_page()
         page.bring_to_front()  # Bring the browser window to the front
@@ -141,6 +143,7 @@ def download_todays_media():
                 os.makedirs(customer_dir, exist_ok=True)
             else:
                 # No media found → skip
+                print(f"No media found for today for customer {current_customer}")
                 page.goto("https://www.wm.com/us/en/user/login?redirect=/us/en/mywm/user/my-payment/billing/overview")
                 continue
             
