@@ -1,1 +1,0 @@
-print("testing calling the script from render")
