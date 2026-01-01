@@ -1,4 +1,5 @@
 import customer_id_map
+from main import Mode
 
 import os
 import time
@@ -26,8 +27,8 @@ def download_todays_media(mode):
     print(f"Downloading photos for {today}")    
     with sync_playwright() as p:
         # Launch browser
-        
-        browser = p.chromium.launch(headless=True)
+
+        browser = p.chromium.launch(headless=True if mode == Mode.RENDER else False)
         context = browser.new_context()
         page = context.new_page()
         page.bring_to_front()  # Bring the browser window to the front
@@ -45,7 +46,7 @@ def download_todays_media(mode):
         # Click login button
         page.click("button[data-testid='LoginWidget-login-button']")
         list_container = page.locator('div[data-testid="WindowedList"]')
-        if mode == 'render':
+        if mode == Mode.RENDER:
             timeout_ms = 30000
         else:
             timeout_ms = 10000
