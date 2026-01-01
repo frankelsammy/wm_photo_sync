@@ -21,7 +21,7 @@ def get_date(url):
     extracted_date = date(year, month, day)
     return extracted_date
 
-def download_todays_media(): 
+def download_todays_media(mode): 
     today = date.today()
     print(f"Downloading photos for {today}")    
     with sync_playwright() as p:
@@ -45,7 +45,11 @@ def download_todays_media():
         # Click login button
         page.click("button[data-testid='LoginWidget-login-button']")
         list_container = page.locator('div[data-testid="WindowedList"]')
-        list_container.wait_for(state="visible", timeout=10000)
+        if mode == 'render':
+            timeout_ms = 30000
+        else:
+            timeout_ms = 10000
+        list_container.wait_for(state="visible", timeout=timeout_ms)
 
         def find_customer_button(customerID):
             # Scroll to top

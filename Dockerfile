@@ -38,5 +38,5 @@ RUN playwright install chromium
 COPY . .
 
 # Run the main script
-CMD ["python", "-u", "main.py"]
+CMD ["python", "-u", "main.py", "render"]
 
