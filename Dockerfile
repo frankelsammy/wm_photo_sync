@@ -1,8 +1,10 @@
-# Use an official Python image
 FROM python:3.13-slim
 
-# Install system dependencies needed by Playwright and Chromium
+ENV TZ=America/New_York
+
+# System deps for Playwright / Chromium
 RUN apt-get update && apt-get install -y \
+    tzdata \
     curl \
     gnupg \
     ca-certificates \
@@ -21,22 +23,14 @@ RUN apt-get update && apt-get install -y \
     libxkbcommon0 \
     && rm -rf /var/lib/apt/lists/*
 
-# Set working directory
 WORKDIR /app
 
-# Copy Python dependencies
 COPY requirements.txt .
-
-# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Install Playwright and Chromium
-RUN pip install --no-cache-dir playwright
-RUN playwright install chromium
+RUN pip install --no-cache-dir playwright \
+    && playwright install chromium
 
-# Copy the rest of the code
 COPY . .
 
-# Run the main script
 CMD ["python", "-u", "main.py", "render"]
-

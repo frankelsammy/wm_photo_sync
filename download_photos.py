@@ -28,7 +28,7 @@ def download_todays_media(mode):
     with sync_playwright() as p:
         # Launch browser
 
-        browser = p.chromium.launch(headless=True if mode == Mode.RENDER else False)
+        browser = p.chromium.launch(headless=True)
         context = browser.new_context()
         page = context.new_page()
         page.bring_to_front()  # Bring the browser window to the front
@@ -50,7 +50,7 @@ def download_todays_media(mode):
             timeout_ms = 30000
         else:
             timeout_ms = 10000
-        list_container.wait_for(state="visible", timeout=timeout_ms)
+        list_container.wait_for(state="visible", timeout=30000)
 
         def find_customer_button(customerID):
             # Scroll to top
