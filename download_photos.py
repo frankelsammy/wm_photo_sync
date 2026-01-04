@@ -50,8 +50,11 @@ def download_todays_media(mode):
             timeout_ms = 30000
         else:
             timeout_ms = 10000
-        list_container.wait_for(state="visible", timeout=30000)
-
+        try:
+            list_container.wait_for(state="visible", timeout=30_000)
+            print("WindowedList container found and visible")
+        except TimeoutError:
+            print("WindowedList container NOT found after 30 seconds")
         def find_customer_button(customerID):
             # Scroll to top
             list_container.evaluate("(el) => el.scrollTop = 0")
@@ -100,9 +103,14 @@ def download_todays_media(mode):
                 continue 
             print(f"Clicking button for customer: {current_customer}")
             page.click(f'button:has-text("{current_customer}")')
-
-            page.get_by_role("button", name="My Services").wait_for()
-            page.get_by_role("button", name="My Services").click()
+            try:
+                page.get_by_role("button", name="My Services").wait_for()
+                page.get_by_role("button", name="My Services").click()
+            except TimeoutError:
+                print(f"'View Service History' button not found for customer {current_customer}, skipping.")
+                page.goto("https://www.wm.com/us/en/user/login?redirect=/us/en/mywm/user/my-payment/billing/overview")
+                
+                continue
             try:
                 page.get_by_role("button", name="View Service History").wait_for(timeout=5000)
                 page.get_by_role("button", name="View Service History").click()
