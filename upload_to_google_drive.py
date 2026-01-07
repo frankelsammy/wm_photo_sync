@@ -43,16 +43,23 @@ def upload_photos(results_dir):
         service = build("drive", "v3", credentials=creds)
 
         folder_name = "WM Photos"
+        wm_folder_id = '1zOaVshey7wahfCVGjRGhO7T-g5WsCmhJ'
 
         # Check if folder exists
         query = f"mimeType='application/vnd.google-apps.folder' and name='{folder_name}' and trashed=false"
-        response = service.files().list(q=query, spaces='drive', fields='files(id, name)').execute()
+        response = service.files().list(
+            q=query,
+            spaces="drive",
+            fields="files(id, name)",
+            includeItemsFromAllDrives=True,
+            supportsAllDrives=True,
+        ).execute()
         files = response.get('files', [])
 
-        if files:
+        if wm_folder_id:
             # Folder exists
-            wm_folder = files[0]
-            print(f"Folder already exists: {wm_folder['id']}")
+            # wm_folder = files[0]
+            print(f"Folder already exists: {wm_folder_id}")
         else:
             # Folder doesn't exist, create it
             file_metadata = {
@@ -66,7 +73,7 @@ def upload_photos(results_dir):
         for root, dirs, files in os.walk(path):
             for dir in dirs:
                 # Check if the folder already exists
-                query = f"mimeType='application/vnd.google-apps.folder' and name='{dir}' and '{wm_folder['id']}' in parents and trashed=false"
+                query = f"mimeType='application/vnd.google-apps.folder' and name='{dir}' and '{wm_folder_id}' in parents and trashed=false"
                 response = service.files().list(q=query, spaces='drive', fields='files(id, name)').execute()
                 files = response.get('files', [])
                 if files:
@@ -75,7 +82,7 @@ def upload_photos(results_dir):
                     # Create the folder
                     folder_metadata = {
                         "name": dir,
-                        "parents": [wm_folder["id"]],
+                        "parents": [wm_folder_id],
                         "mimeType": "application/vnd.google-apps.folder"
                     }
                     folder = (
