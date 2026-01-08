@@ -45,36 +45,13 @@ def upload_photos(results_dir):
         folder_name = "WM Photos"
         wm_folder_id = '1zOaVshey7wahfCVGjRGhO7T-g5WsCmhJ'
 
-        # Check if folder exists
-        query = f"mimeType='application/vnd.google-apps.folder' and name='{folder_name}' and trashed=false"
-        response = service.files().list(
-            q=query,
-            spaces="drive",
-            fields="files(id, name)",
-            includeItemsFromAllDrives=True,
-            supportsAllDrives=True,
-        ).execute()
-        files = response.get('files', [])
-
-        if wm_folder_id:
-            # Folder exists
-            # wm_folder = files[0]
-            print(f"Folder already exists: {wm_folder_id}")
-        else:
-            # Folder doesn't exist, create it
-            file_metadata = {
-                "name": folder_name,
-                "mimeType": "application/vnd.google-apps.folder"
-            }
-            wm_folder = service.files().create(body=file_metadata, fields="id, name").execute()
-            print(f"Folder created: {wm_folder['id']}")
-
         path = results_dir
+        
         for root, dirs, files in os.walk(path):
             for dir in dirs:
-                # Check if the folder already exists
+                # Check if the folder already exists for this customer
                 query = f"mimeType='application/vnd.google-apps.folder' and name='{dir}' and '{wm_folder_id}' in parents and trashed=false"
-                response = service.files().list(q=query, spaces='drive', fields='files(id, name)').execute()
+                response = service.files().list(q=query, spaces='drive', fields='files(id, name)',includeItemsFromAllDrives=True, supportsAllDrives=True).execute()
                 files = response.get('files', [])
                 if files:
                     folder_id = files[0]['id']
@@ -147,4 +124,5 @@ def upload_photos(results_dir):
 
 
 if __name__ == "__main__":
-  upload_photos("results/2025-12-23")
+  results_dir = f"results/{date.today()}"
+  upload_photos(results_dir)
