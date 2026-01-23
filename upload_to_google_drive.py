@@ -14,6 +14,7 @@ today = date.today()
 today_str = today.strftime("%Y-%m-%d")
 
 def upload_photos(results_dir):
+    photos_uploaded = 0
     SCOPES = ["https://www.googleapis.com/auth/drive.file"]
     creds = None
     # The file token.json stores the user's access and refresh tokens, and is
@@ -91,7 +92,7 @@ def upload_photos(results_dir):
                     print(f"Today's folder created: {today_folder['id']}")
 
                 dir_path = os.path.join(root, dir)
-
+                
                 for filename in os.listdir(dir_path):
                     file_path = os.path.join(dir_path, filename)
 
@@ -112,15 +113,18 @@ def upload_photos(results_dir):
                             media_body=media,
                             fields="id, name"
                         ).execute()
+                        photos_uploaded += 1
                         print(f"Uploaded '{filename}' successfully.")
+                        
 
 
     except HttpError as error:
         print(f"An error occurred: {error}")
         file = None
+
+    return photos_uploaded
   
 
-    
 
 
 if __name__ == "__main__":

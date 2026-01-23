@@ -4,4 +4,6 @@ __pycache__/
 .DS_Store
 credentials.json
 results
+cron.log
 token.json
+token-sammy.json
