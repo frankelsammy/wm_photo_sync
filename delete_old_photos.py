@@ -80,7 +80,6 @@ def delete_old_photos(days_old):
         for folder in parent_folders:
             folder_id = folder['id']
             page_token = None
-            print(f"Checking folder: {folder['name']}")
             while True:
                 response = service.files().list(
                     q=f"'{folder_id}' in parents and trashed=false",
@@ -92,7 +91,6 @@ def delete_old_photos(days_old):
                 ).execute()
 
                 for file in response.get('files', []):
-                    print(f"Found file: {file['name']}")
                     # Convert string to a datetime object
                     date_obj = datetime.strptime(file['name'], "%Y-%m-%d")
                     age_days = (date.today() - date_obj.date()).days
