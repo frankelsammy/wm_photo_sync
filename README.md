@@ -2,7 +2,24 @@
 
 **Automated Photo Download and Upload Service**
 
-`wm_photo_sync` is a Python automation tool developed for Negotiated Waste. It downloads photos from WasteManagement.com for scheduled locations, organizes them by date, and uploads them to Google Drive. The project automatically cleans up old photo directories, is containerized with Docker for reproducible deployments, and uses Playwright to handle browser-based downloads. Integration with the Google Drive API ensures secure and reliable storage of the photos.
+`wm_photo_sync` is a Python automation tool that downloads photos from WasteManagement.com for scheduled locations, organizes them by date, uploads them to Google Drive, and automatically cleans up old data.
+
+The service is designed to run unattended and handle the full lifecycle of photo ingestion, storage, notification, and retention.
+
+---
+
+## Overview
+
+On each run, the service:
+
+* Downloads daily photos using browser automation
+* Stores photos locally in date-based directories
+* Uploads photos to Google Drive
+* Sends email notifications on success or failure
+* Deletes old local photo directories
+* Removes expired photos from Google Drive based on a retention policy
+
+A lightweight render/preview mode is also supported.
 
 ---
 
@@ -10,13 +27,22 @@
 
 ```
 wm_photo_sync/
-├── main.py                     # Main script
-├── download_photos.py           # Handles downloading media
-├── upload_to_google_drive.py    # Handles uploading to Google Drive
-├── requirements.txt             # Python dependencies
-├── Dockerfile                   # Docker container definition
-├── customer_id_map.py           # Customer mappings
-└── results/                     # Temporary folder for downloaded photos
+├── main.py                        # Orchestrates the full workflow
+├── download_photos.py            # Downloads photos via browser automation
+├── upload_to_google_drive.py     # Uploads files to Google Drive
+├── delete_old_photos.py          # Deletes old photos from Google Drive
+├── send_email.py                 # Email notifications
+├── customer_id_map.py            # Customer/location mappings
+├── requirements.txt              # Python dependencies
+├── Dockerfile                    # Container definition
+└── results/                     # Temporary local photo storage
 ```
 
+---
 
+## Technologies
+
+* Python
+* Playwright
+* Google Drive API
+* Docker
