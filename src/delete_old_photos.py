@@ -59,6 +59,7 @@ def list_folders(parent_folder_id):
 def delete_old_photos(days_old):
     SCOPES = ["https://www.googleapis.com/auth/drive"]
     creds = None
+    deleted_photos = 0
     if os.path.exists("token.json"):
         creds = Credentials.from_authorized_user_file("token.json", SCOPES)
 
@@ -97,10 +98,12 @@ def delete_old_photos(days_old):
                     if age_days > days_old:
                         print(f"Deleting file: {file['name']} (age: {age_days} days)")
                         service.files().delete(fileId=file['id']).execute()
+                        deleted_photos += 1
 
                 page_token = response.get('nextPageToken', None)
                 if page_token is None:
                     break
+        return deleted_photos
         
     except HttpError as error:
         print(f'An error occurred: {error}')

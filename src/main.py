@@ -21,11 +21,11 @@ if __name__ == "__main__":
         results_dir = download_photos.download_todays_media(mode)
         print("Finished downloading photos. Now uploading to Google Drive...")
         photos_uploaded = upload_to_google_drive.upload_photos(results_dir)
-        gmail.send_email(f"WM Photo Sync completed successfully. {photos_uploaded} photos uploaded.")
         print("Upload complete.")
         # Now delete old photos from Google Drive
         print("Deleting old photos from Google Drive...")
-        delete_old_photos.delete_old_photos(days_old=30)
+        deleted = delete_old_photos.delete_old_photos(days_old=30)
+        gmail.send_email(f"WM Photo Sync completed successfully. {photos_uploaded} photos uploaded. {deleted} old photos deleted.")
     except Exception as e:
         print(f"An error occurred during download/upload: {e}")
         gmail.send_email(f"An error occurred during download/upload: {e}")
