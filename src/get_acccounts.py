@@ -1,9 +1,12 @@
+import os
 from playwright.sync_api import sync_playwright
 import time
 import json
+from dotenv import load_dotenv
+load_dotenv()
 
-API_URL = "https://rest-api.wm.com/authorize/user/00u44umwkllPqgs912p7/accounts"
-API_KEY = "AABFF96D4542575160FC"
+API_URL = os.getenv("API_URL")
+API_KEY = os.getenv("API_KEY")
 data = None
 with sync_playwright() as p:
     browser = p.chromium.launch(headless=False)
@@ -12,8 +15,19 @@ with sync_playwright() as p:
 
     # 1️⃣ Go to WM and log in manually
     page.goto("https://www.wm.com/")
-    input("👉 Log in fully, then press ENTER to continue...")
+    page.get_by_test_id("LoginPopover-Button").click()
+    page.wait_for_selector("#flyoutloginEmail")
+    page.fill("#flyoutloginEmail", os.getenv("WM_USER"))
+    page.locator("#flyoutloginPassword").fill(os.getenv("WM_PASSWORD"))
+    # page.wait_for_selector("#PasswordInput")
+    # page.fill("#PasswordInput", os.getenv("WM_PASSWORD"))
+    page.locator("#flyoutloginPassword") \
+    .locator("xpath=ancestor::form") \
+    .locator("button[type='submit']") \
+    .click()
 
+    # Click login button
+    # page.click("button[data-testid='LoginWidget-login-button']")
     # 2️⃣ Call API using authenticated session
     response = page.request.get(
         API_URL,

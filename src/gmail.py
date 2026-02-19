@@ -7,7 +7,7 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-# If modifying these scopes, delete the file sammy-token.json.
+
 SCOPES = ["https://www.googleapis.com/auth/gmail.modify"]
 
 def get_gmail_service():
@@ -81,5 +81,5 @@ def delete_email(message_id):
        service.close()
   
 if __name__ == "__main__":
-  # send_email("This is a test email sent from Python!")
-  delete_email("19c30b6b09dd9243")
+  send_email("This is a test email sent from Python!")
+  #delete_email("19c30b6b09dd9243")

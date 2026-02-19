@@ -12,10 +12,9 @@ class Mode(Enum):
     RENDER = 1
 if __name__ == "__main__":
     #delete photos from two days ago before downloading today's
-    yesterday = date.today() - timedelta(2)
-    shutil.rmtree("results/" + str(yesterday), ignore_errors=True)
+    old_dir = date.today() - timedelta(2)
+    shutil.rmtree("results/" + str(old_dir), ignore_errors=True)
 
-    #Check if any locations were schedulued for service yesterday and we didn't download any photos for them
     mode = Mode.RENDER if len(sys.argv) > 1 and sys.argv[1] == "render" else Mode.NORMAL
     try:
         results_dir = download_photos.download_todays_media(mode)
