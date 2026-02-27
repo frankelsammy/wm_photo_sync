@@ -96,13 +96,13 @@ def delete_old_photos(days_old):
                     date_obj = datetime.strptime(file['name'], "%Y-%m-%d")
                     age_days = (date.today() - date_obj.date()).days
                     if age_days > days_old:
-                        print(f"Deleting file: {file['name']} (age: {age_days} days)")
                         service.files().delete(fileId=file['id']).execute()
                         deleted_photos += 1
 
                 page_token = response.get('nextPageToken', None)
                 if page_token is None:
                     break
+        print(f"Deleted {deleted_photos} photos older than {days_old} days.")
         return deleted_photos
         
     except HttpError as error:

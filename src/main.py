@@ -20,7 +20,7 @@ if __name__ == "__main__":
         results_dir = download_photos.download_todays_media(mode)
         print("Finished downloading photos. Now uploading to Google Drive...")
         photos_uploaded = upload_to_google_drive.upload_photos(results_dir)
-        print("Upload complete.")
+        print(f"Upload complete. {photos_uploaded} photos uploaded.")
         # Now delete old photos from Google Drive
         print("Deleting old photos from Google Drive...")
         deleted = delete_old_photos.delete_old_photos(days_old=30)
