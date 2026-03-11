@@ -24,7 +24,7 @@ if __name__ == "__main__":
         # Now delete old photos from Google Drive
         print("Deleting old photos from Google Drive...")
         deleted = delete_old_photos.delete_old_photos(days_old=30)
-        gmail.send_email(f"WM Photo Sync completed successfully. {photos_uploaded} photos uploaded. {deleted} old photos deleted.")
+        gmail.send_email(f"WM Photo Sync completed successfully. {photos_uploaded} photos uploaded. {deleted} old folders deleted.")
     except Exception as e:
         print(f"An error occurred during download/upload: {e}")
         gmail.send_email(f"An error occurred during download/upload: {e}")
