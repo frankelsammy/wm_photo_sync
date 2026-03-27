@@ -1,5 +1,6 @@
 import os.path
 from datetime import date, datetime
+import pytz
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -94,7 +95,7 @@ def delete_old_photos(days_old):
                 for file in response.get('files', []):
                     # Convert string to a datetime object
                     date_obj = datetime.strptime(file['name'], "%Y-%m-%d")
-                    age_days = (date.today() - date_obj.date()).days
+                    age_days = (datetime.now(pytz.timezone('America/New_York')).date() - date_obj.date()).days
                     if age_days > days_old:
                         service.files().delete(fileId=file['id']).execute()
                         deleted_photos += 1

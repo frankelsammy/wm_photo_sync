@@ -3,7 +3,8 @@ from main import Mode
 
 import os
 import time
-from datetime import date
+from datetime import date, datetime
+import pytz
 from dotenv import load_dotenv
 from playwright.sync_api import sync_playwright, TimeoutError
 
@@ -23,7 +24,7 @@ def get_date(url):
     return extracted_date
 
 def download_todays_media(mode): 
-    today = date.today()
+    today = datetime.now(pytz.timezone('America/New_York')).date()
     print(f"Downloading photos for {today}")    
     with sync_playwright() as p:
         # Launch browser
@@ -77,7 +78,7 @@ def download_todays_media(mode):
             return None  # Button not found
         
         # Make directory for today's results
-        results_dir = f"results/{date.today()}"
+        results_dir = f"results/{today}"
         os.makedirs(results_dir, exist_ok=True)
         
         i = 0

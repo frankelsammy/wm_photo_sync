@@ -1,0 +1,41 @@
+name: Run Download Photos Script
+
+on:
+  schedule:
+    - cron: '0 20 * * *'   # 3:00 PM EST
+    - cron: '0 3 * * *'   # 10:00 PM EST
+  workflow_dispatch:        # allows manual triggering too
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+      
+      - name: Install Playwright browsers
+        run: playwright install --with-deps chromium
+      
+      - name: Create secret files
+        run: |
+          echo "${{ secrets.ENV_FILE }}" > src/.env
+          cat <<'EOF' > src/token.json
+          ${{ secrets.TOKEN1 }}
+          EOF
+          cat <<'EOF' > src/token-sammy.json
+          ${{ secrets.TOKEN2 }}
+          EOF
+
+      - name: Run script
+        working-directory: src
+        run: python -u main.py

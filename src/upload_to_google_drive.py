@@ -1,5 +1,6 @@
 import os.path
-from datetime import date
+from datetime import date, datetime
+import pytz
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -10,7 +11,7 @@ from googleapiclient.errors import HttpError
 import os
 
 
-today = date.today()
+today = datetime.now(pytz.timezone('America/New_York')).date()
 today_str = today.strftime("%Y-%m-%d")
 
 def upload_photos(results_dir):
@@ -128,5 +129,5 @@ def upload_photos(results_dir):
 
 
 if __name__ == "__main__":
-  results_dir = f"results/{date.today()}"
+  results_dir = f"results/{today}"
   upload_photos(results_dir)

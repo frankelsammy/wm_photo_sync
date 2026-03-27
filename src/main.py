@@ -1,6 +1,7 @@
 import shutil
 import sys
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
+import pytz
 from enum import Enum
 
 import download_photos
@@ -12,7 +13,7 @@ class Mode(Enum):
     RENDER = 1
 if __name__ == "__main__":
     #delete photos from two days ago before downloading today's
-    old_dir = date.today() - timedelta(2)
+    old_dir = datetime.now(pytz.timezone('America/New_York')).date() - timedelta(2)
     shutil.rmtree("results/" + str(old_dir), ignore_errors=True)
 
     mode = Mode.RENDER if len(sys.argv) > 1 and sys.argv[1] == "render" else Mode.NORMAL
