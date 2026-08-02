@@ -6,6 +6,7 @@ from enum import Enum
 import os
 
 import download_photos
+from get_acccounts import fetch_accounts
 import upload_to_google_drive
 import delete_old_photos
 import gmail
@@ -13,6 +14,7 @@ class Mode(Enum):
     NORMAL = 0,
     RENDER = 1
 if __name__ == "__main__":
+    fetch_accounts(output_file="results/accounts.json")
     is_github = os.environ.get("GITHUB_ACTIONS") == "true"
     location = "GitHub Actions" if is_github else "local"
     #delete photos from two days ago before downloading today's

@@ -2,7 +2,6 @@ import customer_id_map
 from main import Mode
 
 import os
-import time
 from datetime import date, datetime
 import pytz
 from dotenv import load_dotenv
@@ -129,7 +128,7 @@ def download_todays_media(mode):
                 print(f"'View Details' button did not appear for customer {current_customer}, skipping.")
                 page.goto("https://www.wm.com/us/en/user/login?redirect=/us/en/mywm/user/my-payment/billing/overview")
                 continue
-            time.sleep(5)  # Wait for the service history page to load
+            page.wait_for_timeout(5000)  # Wait for the service history page to load
             
 
             # --- Collect ALL truckimages media from the DOM ---
@@ -179,7 +178,7 @@ def download_todays_media(mode):
                     f.write(content)
                 # return to Billing overview page
             page.goto("https://www.wm.com/us/en/user/login?redirect=/us/en/mywm/user/my-payment/billing/overview")
-        time.sleep(10)
+        page.wait_for_timeout(10000)
         browser.close()
         return results_dir
 if __name__ == "__main__":
